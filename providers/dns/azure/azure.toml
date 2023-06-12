@@ -1,21 +1,49 @@
-Name = "Azure"
+Name = "AzureDNS"
 Description = ''''''
 URL = "https://azure.microsoft.com/services/dns/"
-Code = "azure"
-Since = "v0.4.0"
+Code = "azuredns"
+Since = "v0.1.0"
 
-Example = ''''''
+Example = '''
+### Using client secret
+AZURE_CLIENT_ID=<your service principal client ID> \
+AZURE_TENANT_ID=<your service principal tenant ID> \
+AZURE_CLIENT_SECRET=<your service principal client secret> \
+lego --domains example.com --email your_example@email.com --dns azuredns run
+### Using client certificate
+AZURE_CLIENT_ID=<your service principal client ID> \
+AZURE_TENANT_ID=<your service principal tenant ID> \
+AZURE_CLIENT_CERTIFICATE_PATH=<your service principal certificate path> \
+lego --domains example.com --email your_example@email.com --dns azuredns run
+### Using Azure CLI
+az login \
+lego --domains example.com --email your_example@email.com --dns azuredns run
+'''
+
+Additional = '''
+## Description
+Azure Credentials are automatically detected in the following locations and prioritized in the following order:
+1. Environment variables for client secret: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`
+2. Environment variables for client certificate: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_CERTIFICATE_PATH`
+3. Workload managed identity for resources hosted in Azure environment
+4. Shared credentials file (defaults to `~/.azure`), used by Azure CLI
+Link:
+- [Azure Authentication](https://learn.microsoft.com/en-us/azure/developer/go/azure-sdk-authentication)
+'''
 
 [Configuration]
   [Configuration.Credentials]
-    AZURE_ENVIRONMENT = "Azure environment, one of: public, usgovernment, german, and china"
     AZURE_CLIENT_ID = "Client ID"
-    AZURE_CLIENT_SECRET = "Client secret"
-    AZURE_SUBSCRIPTION_ID = "Subscription ID"
     AZURE_TENANT_ID = "Tenant ID"
-    AZURE_RESOURCE_GROUP = "Resource group"
-    'instance metadata service' = "If the credentials are **not** set via the environment, then it will attempt to get a bearer token via the [instance metadata service](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/instance-metadata-service)."
+    AZURE_CLIENT_SECRET = "Client secret"
+    AZURE_CLIENT_CERTIFICATE_PATH = "Path to a certificate file including private key"
+    'workload managed identity' = "If you are executing on a Azure hosted workload, and client credentials environment variables are **not** set, then the managed identity of the resource will be used"
+    'azure cli login' = "If you are **not** executing on a Azure hosted workload, and client credentials environment variables are **not** set, then the Azure CLI login informations will be used"
+    AZURE_SUBSCRIPTION_ID = "DNS zone subscription ID"
+    AZURE_RESOURCE_GROUP = "DNS zone resource group"
+    'instance metadata service' = "If the credentials are **not** set via the environment, then it will attempt to get a bearer token via the [instance metadata service](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/instance-metadata-service)"
   [Configuration.Additional]
+    AZURE_ENVIRONMENT = "Azure environment, one of: public, usgovernment, and china"
     AZURE_METADATA_ENDPOINT = "Metadata Service endpoint URL"
     AZURE_PRIVATE_ZONE = "Set to true to use Azure Private DNS Zones and not public"
     AZURE_ZONE_NAME = "Zone name to use inside Azure DNS service to add the TXT record in"

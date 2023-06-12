@@ -15,10 +15,7 @@ const envDomain = envNamespace + "DOMAIN"
 
 var envTest = tester.NewEnvTest(
 	EnvEnvironment,
-	EnvClientID,
-	EnvClientSecret,
 	EnvSubscriptionID,
-	EnvTenantID,
 	EnvResourceGroup).
 	WithDomain(envDomain)
 
@@ -31,23 +28,9 @@ func TestNewDNSProvider(t *testing.T) {
 		{
 			desc: "success",
 			envVars: map[string]string{
-				EnvClientID:       "A",
-				EnvClientSecret:   "B",
-				EnvTenantID:       "C",
-				EnvSubscriptionID: "D",
-				EnvResourceGroup:  "E",
+				EnvSubscriptionID: "A",
+				EnvResourceGroup:  "B",
 			},
-		},
-		{
-			desc: "missing client ID",
-			envVars: map[string]string{
-				EnvClientID:       "",
-				EnvClientSecret:   "B",
-				EnvTenantID:       "C",
-				EnvSubscriptionID: "D",
-				EnvResourceGroup:  "E",
-			},
-			expected: "failed to get SPT from client credentials: parameter 'clientID' cannot be empty",
 		},
 	}
 
@@ -60,16 +43,11 @@ func TestNewDNSProvider(t *testing.T) {
 
 			p, err := NewDNSProvider()
 
-			if test.expected != "" {
-				require.EqualError(t, err, test.expected)
-				return
-			}
-
 			require.NoError(t, err)
 			require.NotNil(t, p)
 			require.NotNil(t, p.provider)
 
-			assert.IsType(t, p.provider, new(dnsProviderPublic))
+			assert.IsType(t, p.provider, new(DNSProviderPublic))
 		})
 	}
 }
@@ -77,10 +55,7 @@ func TestNewDNSProvider(t *testing.T) {
 func TestNewDNSProviderConfig(t *testing.T) {
 	testCases := []struct {
 		desc           string
-		clientID       string
-		clientSecret   string
 		subscriptionID string
-		tenantID       string
 		resourceGroup  string
 		privateZone    bool
 		handler        func(w http.ResponseWriter, r *http.Request)
@@ -88,45 +63,30 @@ func TestNewDNSProviderConfig(t *testing.T) {
 	}{
 		{
 			desc:           "success (public)",
-			clientID:       "A",
-			clientSecret:   "B",
-			tenantID:       "C",
-			subscriptionID: "D",
-			resourceGroup:  "E",
+			subscriptionID: "A",
+			resourceGroup:  "B",
 			privateZone:    false,
 		},
 		{
 			desc:           "success (private)",
-			clientID:       "A",
-			clientSecret:   "B",
-			tenantID:       "C",
-			subscriptionID: "D",
-			resourceGroup:  "E",
+			subscriptionID: "A",
+			resourceGroup:  "B",
 			privateZone:    true,
 		},
 		{
 			desc:           "SubscriptionID missing",
-			clientID:       "A",
-			clientSecret:   "B",
-			tenantID:       "C",
 			subscriptionID: "",
 			resourceGroup:  "",
-			expected:       "azure: SubscriptionID is missing",
+			expected:       "azuredns: SubscriptionID is missing",
 		},
 		{
 			desc:           "ResourceGroup missing",
-			clientID:       "A",
-			clientSecret:   "B",
-			tenantID:       "C",
-			subscriptionID: "D",
+			subscriptionID: "A",
 			resourceGroup:  "",
-			expected:       "azure: ResourceGroup is missing",
+			expected:       "azuredns: ResourceGroup is missing",
 		},
 		{
 			desc:           "use metadata",
-			clientID:       "A",
-			clientSecret:   "B",
-			tenantID:       "C",
 			subscriptionID: "",
 			resourceGroup:  "",
 			handler: func(w http.ResponseWriter, _ *http.Request) {
@@ -142,10 +102,7 @@ func TestNewDNSProviderConfig(t *testing.T) {
 	for _, test := range testCases {
 		t.Run(test.desc, func(t *testing.T) {
 			config := NewDefaultConfig()
-			config.ClientID = test.clientID
-			config.ClientSecret = test.clientSecret
 			config.SubscriptionID = test.subscriptionID
-			config.TenantID = test.tenantID
 			config.ResourceGroup = test.resourceGroup
 			config.PrivateZone = test.privateZone
 
@@ -172,9 +129,9 @@ func TestNewDNSProviderConfig(t *testing.T) {
 			require.NotNil(t, p.provider)
 
 			if test.privateZone {
-				assert.IsType(t, p.provider, new(dnsProviderPrivate))
+				assert.IsType(t, p.provider, new(DNSProviderPrivate))
 			} else {
-				assert.IsType(t, p.provider, new(dnsProviderPublic))
+				assert.IsType(t, p.provider, new(DNSProviderPublic))
 			}
 		})
 	}
