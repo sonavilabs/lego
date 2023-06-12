@@ -1,4 +1,4 @@
-module github.com/sonavilabs/lego/v4
+module github.com/go-acme/lego/v4
 
 go 1.19
 
