@@ -8,8 +8,8 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/go-acme/lego/v4/acme/api/internal/nonces"
 	jose "github.com/go-jose/go-jose/v3"
+	"github.com/sonavilabs/lego/v4/acme/api/internal/nonces"
 )
 
 // JWS Represents a JWS.

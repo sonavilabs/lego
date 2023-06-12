@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const defaultBaseURL = "https://api.dynect.net/REST"

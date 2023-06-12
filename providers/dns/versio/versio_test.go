@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/go-acme/lego/v4/log"
-	"github.com/go-acme/lego/v4/platform/tester"
+	"github.com/sonavilabs/lego/v4/log"
+	"github.com/sonavilabs/lego/v4/platform/tester"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

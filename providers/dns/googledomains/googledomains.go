@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-acme/lego/v4/challenge"
-	"github.com/go-acme/lego/v4/challenge/dns01"
-	"github.com/go-acme/lego/v4/platform/config/env"
+	"github.com/sonavilabs/lego/v4/challenge"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
+	"github.com/sonavilabs/lego/v4/platform/config/env"
 	"google.golang.org/api/acmedns/v1"
 	"google.golang.org/api/option"
 )

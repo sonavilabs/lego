@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-acme/lego/v4/challenge/dns01"
-	"github.com/go-acme/lego/v4/platform/config/env"
 	"github.com/iij/doapi"
 	"github.com/iij/doapi/protocol"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
+	"github.com/sonavilabs/lego/v4/platform/config/env"
 )
 
 // Environment variables names.

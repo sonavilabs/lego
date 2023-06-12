@@ -8,9 +8,9 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/go-acme/lego/v4/log"
-	"github.com/go-acme/lego/v4/platform/tester"
-	"github.com/go-acme/lego/v4/providers/dns/gandiv5/internal"
+	"github.com/sonavilabs/lego/v4/log"
+	"github.com/sonavilabs/lego/v4/platform/tester"
+	"github.com/sonavilabs/lego/v4/providers/dns/gandiv5/internal"
 	"github.com/stretchr/testify/require"
 )
 

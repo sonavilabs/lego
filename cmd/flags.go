@@ -3,7 +3,7 @@ package cmd
 import (
 	"time"
 
-	"github.com/go-acme/lego/v4/lego"
+	"github.com/sonavilabs/lego/v4/lego"
 	"github.com/urfave/cli/v2"
 	"software.sslmate.com/src/go-pkcs12"
 )

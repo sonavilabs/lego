@@ -13,8 +13,8 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
 	querystring "github.com/google/go-querystring/query"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const baseURL = "https://api.internet.bs"

@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
 	"github.com/pquerna/otp/totp"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const (

@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-acme/lego/v4/challenge/dns01"
-	"github.com/go-acme/lego/v4/platform/config/env"
 	"github.com/nrdcg/auroradns"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
+	"github.com/sonavilabs/lego/v4/platform/config/env"
 )
 
 const defaultBaseURL = "https://api.auroradns.eu"

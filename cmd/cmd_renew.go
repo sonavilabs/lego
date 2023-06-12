@@ -8,12 +8,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-acme/lego/v4/acme/api"
-	"github.com/go-acme/lego/v4/certcrypto"
-	"github.com/go-acme/lego/v4/certificate"
-	"github.com/go-acme/lego/v4/lego"
-	"github.com/go-acme/lego/v4/log"
 	"github.com/mattn/go-isatty"
+	"github.com/sonavilabs/lego/v4/acme/api"
+	"github.com/sonavilabs/lego/v4/certcrypto"
+	"github.com/sonavilabs/lego/v4/certificate"
+	"github.com/sonavilabs/lego/v4/lego"
+	"github.com/sonavilabs/lego/v4/log"
 	"github.com/urfave/cli/v2"
 )
 
@@ -184,7 +184,7 @@ func renewForDomains(ctx *cli.Context, client *lego.Client, certsStorage *Certif
 		}
 	}
 
-	// https://github.com/go-acme/lego/issues/1656
+	// https://github.com/sonavilabs/lego/issues/1656
 	// https://github.com/certbot/certbot/blob/284023a1b7672be2bd4018dd7623b3b92197d4b0/certbot/certbot/_internal/renewal.py#L435-L440
 	if !isatty.IsTerminal(os.Stdout.Fd()) && !ctx.Bool("no-random-sleep") {
 		// https://github.com/certbot/certbot/blob/284023a1b7672be2bd4018dd7623b3b92197d4b0/certbot/certbot/_internal/renewal.py#L472

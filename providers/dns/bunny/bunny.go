@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-acme/lego/v4/challenge/dns01"
-	"github.com/go-acme/lego/v4/platform/config/env"
 	"github.com/simplesurance/bunny-go"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
+	"github.com/sonavilabs/lego/v4/platform/config/env"
 )
 
 const minTTL = 60

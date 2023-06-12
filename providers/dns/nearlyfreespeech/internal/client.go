@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-acme/lego/v4/challenge/dns01"
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
 	querystring "github.com/google/go-querystring/query"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const apiURL = "https://api.nearlyfreespeech.net"

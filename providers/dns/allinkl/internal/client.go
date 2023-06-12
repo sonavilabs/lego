@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
 	"github.com/mitchellh/mapstructure"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const apiEndpoint = "https://kasapi.kasserver.com/soap/KasApi.php"

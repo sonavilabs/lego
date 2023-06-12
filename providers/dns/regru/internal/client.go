@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const defaultBaseURL = "https://api.reg.ru/api/regru2/"

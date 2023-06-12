@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
 	querystring "github.com/google/go-querystring/query"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 const defaultBaseURL = "https://api.derak.cloud/v1.0"

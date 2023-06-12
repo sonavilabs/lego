@@ -12,8 +12,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"github.com/go-acme/lego/v4/challenge"
-	"github.com/go-acme/lego/v4/platform/config/env"
+	"github.com/sonavilabs/lego/v4/challenge"
+	"github.com/sonavilabs/lego/v4/platform/config/env"
 )
 
 const defaultMetadataEndpoint = "http://169.254.169.254"

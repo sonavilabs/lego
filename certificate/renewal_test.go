@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-acme/lego/v4/acme"
-	"github.com/go-acme/lego/v4/acme/api"
-	"github.com/go-acme/lego/v4/certcrypto"
-	"github.com/go-acme/lego/v4/platform/tester"
 	"github.com/go-jose/go-jose/v3"
+	"github.com/sonavilabs/lego/v4/acme"
+	"github.com/sonavilabs/lego/v4/acme/api"
+	"github.com/sonavilabs/lego/v4/certcrypto"
+	"github.com/sonavilabs/lego/v4/platform/tester"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

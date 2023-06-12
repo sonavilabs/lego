@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/go-acme/lego/v4/challenge/dns01"
 	"github.com/sacloud/iaas-api-go"
 	"github.com/sacloud/iaas-api-go/search"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
 )
 
 // This mutex is required for concurrent updates.
-// see: https://github.com/go-acme/lego/pull/850
+// see: https://github.com/sonavilabs/lego/pull/850
 var mu sync.Mutex
 
 func (d *DNSProvider) addTXTRecord(fqdn, value string, ttl int) error {

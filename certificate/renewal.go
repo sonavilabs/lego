@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-acme/lego/v4/acme"
+	"github.com/sonavilabs/lego/v4/acme"
 )
 
 // RenewalInfoRequest contains the necessary renewal information.

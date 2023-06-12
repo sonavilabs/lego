@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-acme/lego/v4/challenge"
-	"github.com/go-acme/lego/v4/challenge/dns01"
-	"github.com/go-acme/lego/v4/platform/config/env"
 	"github.com/miekg/dns"
 	dpfapi "github.com/mimuret/golang-iij-dpf/pkg/api"
 	dpfapiutils "github.com/mimuret/golang-iij-dpf/pkg/apiutils"
+	"github.com/sonavilabs/lego/v4/challenge"
+	"github.com/sonavilabs/lego/v4/challenge/dns01"
+	"github.com/sonavilabs/lego/v4/platform/config/env"
 )
 
 // Environment variables names.

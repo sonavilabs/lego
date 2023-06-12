@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-acme/lego/v4/providers/dns/internal/errutils"
 	"github.com/miekg/dns"
+	"github.com/sonavilabs/lego/v4/providers/dns/internal/errutils"
 )
 
 // Client the PowerDNS API client.

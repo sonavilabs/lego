@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-acme/lego/v4/certificate"
-	"github.com/go-acme/lego/v4/lego"
-	"github.com/go-acme/lego/v4/log"
-	"github.com/go-acme/lego/v4/registration"
+	"github.com/sonavilabs/lego/v4/certificate"
+	"github.com/sonavilabs/lego/v4/lego"
+	"github.com/sonavilabs/lego/v4/log"
+	"github.com/sonavilabs/lego/v4/registration"
 	"github.com/urfave/cli/v2"
 )
 

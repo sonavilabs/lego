@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-acme/lego/v4/platform/tester"
 	bindmanClient "github.com/labbsr0x/bindman-dns-webhook/src/client"
+	"github.com/sonavilabs/lego/v4/platform/tester"
 	"github.com/stretchr/testify/require"
 )
 
