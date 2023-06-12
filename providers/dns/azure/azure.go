@@ -47,9 +47,8 @@ type Config struct {
 	ResourceGroup  string
 	PrivateZone    bool
 
-	MetadataEndpoint    string
-	Environment         cloud.Configuration
-	UseWorkloadIdentity bool
+	MetadataEndpoint string
+	Environment      cloud.Configuration
 
 	PropagationTimeout time.Duration
 	PollingInterval    time.Duration
@@ -109,24 +108,22 @@ func NewDNSProvider() (*DNSProvider, error) {
 // NewDNSProviderConfig return a DNSProvider instance configured for Azure.
 func NewDNSProviderConfig(config *Config) (*DNSProvider, error) {
 	if config == nil {
-		return nil, errors.New("azuredns: the configuration of the DNS provider is nil")
+		return nil, errors.New("azure: the configuration of the DNS provider is nil")
 	}
 
 	credentials, err := getTokenCredentials(config)
 	if err != nil {
-		return nil, fmt.Errorf("azuredns: %w", err)
+		return nil, fmt.Errorf("azure: failed to get token credentails %w", err)
 	}
 
 	if config.SubscriptionID == "" {
 		subsID, err := getMetadata(config, "subscriptionId")
 		if err != nil {
-			return nil, fmt.Errorf("azuredns: %w", err)
+			return nil, fmt.Errorf("azure: failed to get subscription id from metadata: %w", err)
 		}
 
-		if !config.UseWorkloadIdentity {
-			if subsID == "" {
-				return nil, errors.New("azuredns: SubscriptionID is missing")
-			}
+		if subsID == "" {
+			return nil, errors.New("azure: SubscriptionID is missing")
 		}
 
 		config.SubscriptionID = subsID
@@ -135,22 +132,29 @@ func NewDNSProviderConfig(config *Config) (*DNSProvider, error) {
 	if config.ResourceGroup == "" {
 		resGroup, err := getMetadata(config, "resourceGroupName")
 		if err != nil {
-			return nil, fmt.Errorf("azuredns: %w", err)
+			return nil, fmt.Errorf("azure: failed to get resource group from metadata:: %w", err)
 		}
 
 		if resGroup == "" {
-			return nil, errors.New("azuredns: ResourceGroup is missing")
+			return nil, errors.New("azure: resourceGroup is missing")
 		}
 		config.ResourceGroup = resGroup
 	}
 
 	if config.PrivateZone {
 		dnsProvider, err := NewDNSProviderPrivate(config, &credentials)
-		return &DNSProvider{provider: dnsProvider}, err
+		if err != nil {
+			return nil, fmt.Errorf("azure: failed to create private dns provider, %w", err)
+		}
+		return &DNSProvider{provider: dnsProvider}, nil
 	}
 
 	dnsProvider, err := NewDNSProviderPublic(config, &credentials)
-	return &DNSProvider{provider: dnsProvider}, err
+	if err != nil {
+		return nil, fmt.Errorf("azure: failed to create public dns provider, %w", err)
+	}
+
+	return &DNSProvider{provider: dnsProvider}, nil
 }
 
 // Timeout returns the timeout and interval to use when checking for DNS propagation.
@@ -161,21 +165,41 @@ func (d *DNSProvider) Timeout() (timeout, interval time.Duration) {
 
 // Present creates a TXT record to fulfill the dns-01 challenge.
 func (d *DNSProvider) Present(domain, token, keyAuth string) error {
-	return d.provider.Present(domain, token, keyAuth)
+	err := d.provider.Present(domain, token, keyAuth)
+	if err != nil {
+		return fmt.Errorf("failed to present txt record, %w", err)
+	}
+
+	return nil
 }
 
 // CleanUp removes the TXT record matching the specified parameters.
 func (d *DNSProvider) CleanUp(domain, token, keyAuth string) error {
-	return d.provider.CleanUp(domain, token, keyAuth)
+	err := d.provider.CleanUp(domain, token, keyAuth)
+	if err != nil {
+		return fmt.Errorf("failed to clean up dns, %w", err)
+	}
+
+	return nil
 }
 
 // Creates token credentials from config, if not set from environment.
 func getTokenCredentials(config *Config) (azcore.TokenCredential, error) {
 	if config.ClientID != "" && config.ClientSecret != "" && config.TenantID != "" {
-		return azidentity.NewClientSecretCredential(config.TenantID, config.ClientID, config.ClientSecret, nil)
+		creds, err := azidentity.NewClientSecretCredential(config.TenantID, config.ClientID, config.ClientSecret, nil)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get token from secret credentials, %w", err)
+		}
+
+		return creds, nil
 	}
 
-	return azidentity.NewDefaultAzureCredential(nil)
+	creds, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get token using default credentials, %w", err)
+	}
+
+	return creds, nil
 }
 
 // Fetches metadata from environment or he instance metadata service.
@@ -189,7 +213,7 @@ func getMetadata(config *Config, field string) (string, error) {
 	resource := fmt.Sprintf("%s/metadata/instance/compute/%s", metadataEndpoint, field)
 	req, err := http.NewRequest(http.MethodGet, resource, nil)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to create metadata request, %w", err)
 	}
 
 	req.Header.Set("Metadata", "True")
@@ -201,13 +225,13 @@ func getMetadata(config *Config, field string) (string, error) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to execute metadata request, %w", err)
 	}
 	defer resp.Body.Close()
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to read response body from metadata request, %w", err)
 	}
 
 	return string(respBody), nil

@@ -33,12 +33,12 @@ func NewDNSProviderPublic(config *Config, credentials *azcore.TokenCredential) (
 
 	zoneClient, err := armdns.NewZonesClient(config.SubscriptionID, *credentials, &options)
 	if err != nil {
-		return nil, fmt.Errorf("azuredns: %w", err)
+		return nil, fmt.Errorf("azure: failed to init zones client %w", err)
 	}
 
 	recordClient, err := armdns.NewRecordSetsClient(config.SubscriptionID, *credentials, &options)
 	if err != nil {
-		return nil, fmt.Errorf("azuredns: %w", err)
+		return nil, fmt.Errorf("azure: failed to init record set client %w", err)
 	}
 
 	dnsProvider := &DNSProviderPublic{
@@ -64,12 +64,12 @@ func (d *DNSProviderPublic) Present(domain, token, keyAuth string) error {
 
 	zone, err := d.getHostedZoneID(ctx, fqdn)
 	if err != nil {
-		return fmt.Errorf("azuredns: %w", err)
+		return fmt.Errorf("azure: failed to get hosted zone, %w", err)
 	}
 
 	subDomain, err := dns01.ExtractSubDomain(fqdn, zone)
 	if err != nil {
-		return fmt.Errorf("azuredns: %w", err)
+		return fmt.Errorf("azure: failed to extract subdomain, %w", err)
 	}
 
 	// Get existing record set
@@ -77,7 +77,7 @@ func (d *DNSProviderPublic) Present(domain, token, keyAuth string) error {
 	if err != nil {
 		var respErr *azcore.ResponseError
 		if !errors.As(err, &respErr) || respErr.StatusCode != http.StatusNotFound {
-			return fmt.Errorf("azuredns: %w", err)
+			return fmt.Errorf("azure: failed to get existing record set, %w", err)
 		}
 	}
 
@@ -109,7 +109,7 @@ func (d *DNSProviderPublic) Present(domain, token, keyAuth string) error {
 
 	_, err = d.recordClient.CreateOrUpdate(ctx, d.config.ResourceGroup, zone, subDomain, armdns.RecordTypeTXT, rec, nil)
 	if err != nil {
-		return fmt.Errorf("azuredns: %w", err)
+		return fmt.Errorf("azure: failed to create/update record, %w", err)
 	}
 	return nil
 }
@@ -121,17 +121,17 @@ func (d *DNSProviderPublic) CleanUp(domain, token, keyAuth string) error {
 
 	zone, err := d.getHostedZoneID(ctx, fqdn)
 	if err != nil {
-		return fmt.Errorf("azurdnse: %w", err)
+		return fmt.Errorf("azure: failed to get hosted zone, %w", err)
 	}
 
 	subDomain, err := dns01.ExtractSubDomain(fqdn, zone)
 	if err != nil {
-		return fmt.Errorf("azuredns: %w", err)
+		return fmt.Errorf("azure: failed to extract subdomain, %w", err)
 	}
 
 	_, err = d.recordClient.Delete(ctx, d.config.ResourceGroup, zone, subDomain, armdns.RecordTypeTXT, nil)
 	if err != nil {
-		return fmt.Errorf("azuredns: %w", err)
+		return fmt.Errorf("azure: failed to delete record, %w", err)
 	}
 	return nil
 }
@@ -144,12 +144,12 @@ func (d *DNSProviderPublic) getHostedZoneID(ctx context.Context, fqdn string) (s
 
 	authZone, err := dns01.FindZoneByFqdn(fqdn)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get zone via fqdn, %w", err)
 	}
 
 	zone, err := d.zoneClient.Get(ctx, d.config.ResourceGroup, dns01.UnFqdn(authZone), nil)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get zone, %w", err)
 	}
 
 	// zone.Name shouldn't have a trailing dot(.)
